@@ -13,18 +13,28 @@
  *******************************************************************************/
 package org.eclipse.osgi.tests.bundles;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.test.assertj.bundle.BundleAssert;
+import org.osgi.test.assertj.bundlecontext.BundleContextAssert;
 import org.osgi.test.common.annotation.InjectBundleContext;
+import org.osgi.test.common.annotation.InjectService;
 import org.osgi.test.common.install.BundleInstaller;
 import org.osgi.test.common.install.BundleInstaller.EmbeddedLocation;
 import org.osgi.test.junit5.context.BundleContextExtension;
+import org.osgi.test.junit5.service.ServiceExtension;
 
 //import java.io.File;
 //import java.io.FileInputStream;
@@ -56,6 +66,7 @@ import org.osgi.test.junit5.context.BundleContextExtension;
 //import org.osgi.test.common.install.BundleInstaller;
 
 @ExtendWith(BundleContextExtension.class)
+@ExtendWith(ServiceExtension.class)
 public class BundleInstallUpdateTests {
 
 	@InjectBundleContext
@@ -64,7 +75,7 @@ public class BundleInstallUpdateTests {
 //	@InjectBundleInstaller
 //	BundleInstaller installer;
 
-	private static EmbeddedLocation embeddeLocation(BundleContext bundleContext, String jarName) throws IOException {
+	private static EmbeddedLocation embeddeLocation(BundleContext bundleContext, String jarName) {
 		return BundleInstaller.EmbeddedLocation.of(bundleContext, jarName);
 	}
 
@@ -91,74 +102,91 @@ public class BundleInstallUpdateTests {
 		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
 
 	}
-//
-//	// test installing with location and non-null stream
-//	@Test
-//	public void testInstallWithStream03() throws Exception {
-//		String location1 = installer.getBundleLocation("test"); //$NON-NLS-1$
-//		String location2 = installer.getBundleLocation("test2"); //$NON-NLS-1$
-//		Bundle test = installer.installBundleAtLocation(location1, new URL(location2).openStream());
-//		assertEquals("Wrong BSN", "test2", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//	}
-//
-//	// test update with null stream
-//	@Test
-//	public void testUpdateNoStream01() throws BundleException {
-//		String location = installer.getBundleLocation("test"); //$NON-NLS-1$
-//		Bundle test = installer.installBundleAtLocation(location);
-//		assertEquals("Wrong BSN", "test1", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//		test.update();
-//		assertEquals("Wrong BSN", "test1", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//	}
-//
-//	// test update with null stream
-//	@Test
-//	public void testUpdateNoStream02() throws BundleException {
-//		String location = installer.getBundleLocation("test"); //$NON-NLS-1$
-//		Bundle test = installer.installBundleAtLocation(location);
-//		assertEquals("Wrong BSN", "test1", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//		test.update(null);
-//		assertEquals("Wrong BSN", "test1", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//	}
-//
-//	// test update with null stream
-//	@Test
-//	public void testUpdateWithStream01() throws Exception {
-//		String location1 = installer.getBundleLocation("test"); //$NON-NLS-1$
-//		String location2 = installer.getBundleLocation("test2"); //$NON-NLS-1$
-//		Bundle test = installer.installBundleAtLocation(location1);
-//		assertEquals("Wrong BSN", "test1", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//		test.update(new URL(location2).openStream());
-//		assertEquals("Wrong BSN", "test2", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//	}
-//
-//	// test update with null stream
-//	@Test
-//	public void testUpdateWithStream02() throws Exception {
-//		String location1 = installer.getBundleLocation("test"); //$NON-NLS-1$
-//		String location2 = installer.getBundleLocation("test2"); //$NON-NLS-1$
-//		Bundle test = installer.installBundleAtLocation(location1);
-//		Bundle b1 = installer.installBundle("chain.test"); //$NON-NLS-1$
-//		assertEquals("Wrong BSN", "test1", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//		test.update(new URL(location2).openStream());
-//		assertEquals("Wrong BSN", "test2", test.getSymbolicName()); //$NON-NLS-1$ //$NON-NLS-2$
-//		// make sure b1 is still last bundle in bundles list
-//		Bundle[] bundles = OSGiTestsActivator.getContext().getBundles();
-//		assertTrue("Wrong bundle at the end: " + bundles[bundles.length - 1], bundles[bundles.length - 1] == b1); //$NON-NLS-1$
-//		Bundle[] tests = installer.getPackageAdmin().getBundles(test.getSymbolicName(), null);
-//		assertNotNull("null tests", tests); //$NON-NLS-1$
-//		assertEquals("Wrong number", 1, tests.length); //$NON-NLS-1$
-//		assertTrue("Wrong bundle: " + tests[0], tests[0] == test); //$NON-NLS-1$
-//	}
-//
-//	@Test
-//	public void testBug290193() throws Exception {
-//		URL testBundle = OSGiTestsActivator.getBundle().getEntry("test_files/security/bundles/signed.jar");
-//		File testFile = OSGiTestsActivator.getContext().getDataFile("test with space/test.jar");
-//		assertTrue(testFile.getParentFile().mkdirs());
-//		Files.copy(testBundle.openStream(), testFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-//		installer.installBundleAtLocation("reference:" + testFile.toURI().toString());
-//	}
+
+	// test installing with location and non-null stream
+	@Test
+	public void testInstallWithStream03() throws Exception {
+		URL url = embeddeLocation(bc, "tb_test2.jar").getURL(bc); //$NON-NLS-1$
+		URL urlOther = embeddeLocation(bc, "tb_test1.jar").getURL(bc); //$NON-NLS-1$
+
+		Bundle testBundle = bc.installBundle(urlOther.toString(), url.openStream());
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test2"); //$NON-NLS-1$
+
+	}
+
+	// test update with null stream
+	@Test
+	public void testUpdateNoStream01() throws BundleException, IOException {
+		URL url = embeddeLocation(bc, "tb_test1.jar").getURL(bc); //$NON-NLS-1$
+
+		Bundle testBundle = bc.installBundle(url.toString());
+
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
+		testBundle.update(null);
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
+
+	}
+
+	// test update with null stream
+	@Test
+	public void testUpdateNoStream02() throws BundleException, IOException {
+		URL url = embeddeLocation(bc, "tb_test1.jar").getURL(bc); //$NON-NLS-1$
+
+		Bundle testBundle = bc.installBundle(url.toString());
+
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
+		testBundle.update(null);
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
+	}
+
+	// test update with other valid stream
+	@Test
+	public void testUpdateWithStream01() throws Exception {
+		URL url = embeddeLocation(bc, "tb_test1.jar").getURL(bc); //$NON-NLS-1$
+		URL urlOther = embeddeLocation(bc, "tb_test2.jar").getURL(bc); //$NON-NLS-1$
+
+		Bundle testBundle = bc.installBundle(url.toString());
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
+
+		testBundle.update(urlOther.openStream());
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test2"); //$NON-NLS-1$
+
+	}
+
+	// test update with null stream
+	@Test
+	public void testUpdateWithStream02(@InjectService PackageAdmin packageAdmin) throws Exception {
+
+		URL url_tb_test1 = embeddeLocation(bc, "tb_test1.jar").getURL(bc); //$NON-NLS-1$
+		URL url_tb_test2 = embeddeLocation(bc, "tb_test2.jar").getURL(bc); //$NON-NLS-1$
+		URL url_chain_test_0 = embeddeLocation(bc, "tb_chain_test_0.jar").getURL(bc); //$NON-NLS-1$
+
+		Bundle testBundle = bc.installBundle(url_tb_test1.toString());
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test1"); //$NON-NLS-1$
+		Bundle testBundleChain0 = bc.installBundle(url_chain_test_0.toString());
+		BundleAssert.assertThat(testBundleChain0).isNotNull().hasSymbolicName("chain_test_0"); //$NON-NLS-1$
+
+		testBundle.update(url_tb_test2.openStream());
+		BundleAssert.assertThat(testBundle).isNotNull().hasSymbolicName("test2"); //$NON-NLS-1$
+
+		// make sure testBundleChain0 is still last bundle in bundles list
+		BundleContextAssert.assertThat(bc).hasBundlesThat().last().isEqualTo(testBundleChain0);
+
+		Bundle[] bundlesFromPackAdm = packageAdmin.getBundles(testBundle.getSymbolicName(), null);
+		Assertions.assertThat(bundlesFromPackAdm).isNotNull().hasSize(1).contains(testBundle);
+	}
+
+	@Test
+	public void testBug290193() throws Exception {
+		URL url_security_signed_jar = embeddeLocation(bc, "test_files/security/bundles/signed.jar").getURL(bc); //$NON-NLS-1$
+		File testFile = bc.getDataFile("test with space/test.jar");
+
+		assertTrue(testFile.getParentFile().mkdirs());
+		Files.copy(url_security_signed_jar.openStream(), testFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+		Bundle referencedBundle = bc.installBundle("reference:" + testFile.toURI().toString());
+		BundleAssert.assertThat(referencedBundle).isNotNull();
+	}
 //
 //	@Test
 //	public void testCollisionHook() throws BundleException, IOException {

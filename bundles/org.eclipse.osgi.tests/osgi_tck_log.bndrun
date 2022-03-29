@@ -4,9 +4,7 @@
 -resolve.effective: active
 -runee: JavaSE-1.8
 
-
 -runtrace: true
-
 
 -runrequires: \
 	bnd.identity;id='org.osgi.test.cases.log',\
@@ -18,11 +16,11 @@
 	bnd.identity;id=junit-platform-launcher,\
 	bnd.identity;id=junit-vintage-engine,\
 	bnd.identity;id='org.apache.felix.configadmin'
-	
+
 -runstartlevel: \
-    order=sortbynameversion,\
-    begin=-1
-    
+	order=sortbynameversion,\
+	begin=-1
+
 -runbundles: \
 	assertj-core;version='[3.22.0,3.22.1)',\
 	junit-jupiter-api;version='[5.7.2,5.7.3)',\

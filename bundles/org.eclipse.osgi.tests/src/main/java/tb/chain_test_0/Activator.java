@@ -1,0 +1,46 @@
+/*******************************************************************************
+ * Copyright (c) 2010 IBM Corporation and others.
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package tb.chain_test_0;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.SynchronousBundleListener;
+import tb.chain_test_b.BMultiChain1;
+
+public class Activator implements BundleActivator, SynchronousBundleListener {
+
+	public void start(BundleContext context) throws Exception {
+		if (context.getProperty("test.bug300692") == null)
+			return;
+		if (context.getProperty("test.bug300692.listener") != null) {
+			context.addBundleListener(this);
+		}
+
+		new TestMultiChain();
+		context.removeBundleListener(this);
+	}
+
+	public void stop(BundleContext context) throws Exception {
+		// Nothing
+	}
+
+	public void bundleChanged(BundleEvent event) {
+		if (event.getType() != BundleEvent.LAZY_ACTIVATION)
+			return;
+		Class clazz = BMultiChain1.class;
+		System.out.println(clazz.getName());
+	}
+
+}

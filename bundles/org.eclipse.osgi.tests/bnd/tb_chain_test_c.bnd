@@ -1,0 +1,19 @@
+ref: chain_test_c
+testbundle: tb.${ref}
+Bundle-Name:  ${ref} bundle
+Bundle-SymbolicName: ${ref}
+Bundle-Version: 1.0.0
+Bundle-Activator: ${testbundle}.Activator
+Bundle-Localization: plugin
+Bundle-ActivationPolicy: lazy
+
+-privatepackage: ${testbundle}*
+
+Export-Package: \
+	tb.${ref}
+
+
+Import-Package: \
+	chain.test.d,\
+	org.eclipse.osgi.tests.bundles; resolution:="optional",\
+	org.osgi.framework;version="1.3.0"

@@ -1,8 +1,8 @@
 ref: activator_error1
-testbudle: tb.${ref}
+testbundle: tb.${ref}
 Bundle-Name:  ${ref}
 Bundle-SymbolicName: ${ref}
 Bundle-Version: 1.0.0
-Bundle-Activator: ${testbudle}.Activator
+Bundle-Activator: ${testbundle}.Activator
 
--privatepackage: ${testbudle}*
+-privatepackage: ${testbundle}*

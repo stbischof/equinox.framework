@@ -17,7 +17,13 @@ Export-Package: \
 	
 -includeresource:\
 	tb_activator_error1.jar,\
-	tb_test1.jar
+	tb_test1.jar,\
+	tb_test2.jar,\
+	tb_chain_test_0.jar,\
+	tb_chain_test_a.jar,\
+	tb_chain_test_b.jar,\
+	tb_chain_test_c.jar,\
+	tb_chain_test_d.jar
 
 Eclipse-BundleShape: dir
 

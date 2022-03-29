@@ -1,9 +1,8 @@
-ref: test1
+ref: test2
 testbundle: tb.${ref}
 Bundle-Name:  ${ref} bundle
 Bundle-SymbolicName: ${ref}
 Bundle-Version: 1.0.0
-Bundle-Activator: ${testbundle}.Activator
 
 -privatepackage: ${testbundle}*
 
@@ -14,4 +13,6 @@ Bundle-Localization: plugin
 Export-Package: \
 	tb.${ref}.data,\
 	org.eclipse.osgi.tests.appadmin
+
+Require-Bundle: test1
 
