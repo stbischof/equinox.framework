@@ -1,0 +1,2 @@
+@org.osgi.annotation.versioning.Version("0.0.0") @org.osgi.annotation.bundle.Export(attribute = "x-friends:='org.eclipse.ui.workbench,org.eclipse.equinox.p2.artifact.repository'")
+package org.eclipse.osgi.internal.provisional.verifier;

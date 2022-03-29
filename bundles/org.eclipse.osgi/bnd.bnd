@@ -1,0 +1,87 @@
+###############################################################################
+# Copyright (c) 2022 IBM Corporation and others.
+#
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#     Stefan Bischof - switch from tycho to bnd
+###############################################################################
+
+Bundle-SymbolicName: ${project.artifactId}; singleton:=true
+
+-includeresource: \
+	@org.apache.felix.resolver-${felix.resolver.version}.jar!/!(META-INF/*|org/apache/felix/resolver/Activator.class)
+
+   
+Import-Package: \
+	!com.ibm.cds,\
+	!com.ibm.oti.shared,\
+	!org.eclipse.osgi.internal.resolver,\
+	*
+
+-privatepackage: \
+	org.eclipse.osgi.internal*,\
+	org.eclipse.osgi.framework.internal*,\
+	org.eclipse.osgi.runtime.internal*
+	
+
+# project Exports happen via @Export annotation
+# org.eclipse.equinox.supplement and OSGi Packages are cypied and exportes by setting name  
+Export-Package: \
+	org.eclipse.equinox.log,\
+	org.eclipse.osgi.framework.console,\
+	org.eclipse.osgi.framework.eventmgr,\
+	org.eclipse.osgi.framework.log,\
+	org.eclipse.osgi.report.resolution,\
+	org.eclipse.osgi.service.datalocation,\
+	org.eclipse.osgi.service.debug,\
+	org.eclipse.osgi.service.environment,\
+	org.eclipse.osgi.service.localization,\
+	org.eclipse.osgi.service.runnable,\
+	org.eclipse.osgi.service.urlconversion,\
+	org.eclipse.osgi.storagemanager,\
+	org.eclipse.osgi.util,\
+	org.osgi.dto,\
+	org.osgi.framework.connect,\
+	org.osgi.framework.dto,\
+	org.osgi.framework.hooks.bundle,\
+	org.osgi.framework.hooks.resolver,\
+	org.osgi.framework.hooks.service,\
+	org.osgi.framework.hooks.weaving,\
+	org.osgi.framework.launch,\
+	org.osgi.framework.namespace,\
+	org.osgi.framework.startlevel.dto,\
+	org.osgi.framework.startlevel,\
+	org.osgi.framework.wiring.dto,\
+	org.osgi.framework.wiring,\
+	org.osgi.framework,\
+	org.osgi.resource.dto,\
+	org.osgi.resource,\
+	org.osgi.service.condition,\
+	org.osgi.service.condpermadmin,\
+	org.osgi.service.log.admin,\
+	org.osgi.service.log,\
+	org.osgi.service.packageadmin,\
+	org.osgi.service.permissionadmin,\
+	org.osgi.service.resolver,\
+	org.osgi.service.serviceloader,\
+	org.osgi.service.startlevel,\
+	org.osgi.service.url,\
+	org.osgi.util.tracker
+	
+-jpms-module-info: ${project.artifactId};access='OPEN'
+
+##really?
+
+gitHash= ${system-allow-fail;git rev-list -1 --no-abbrev-commit HEAD}
+
+Eclipse-BundleShape:                     jar
+Eclipse-ExtensibleAPI:                   true
+Eclipse-SourceReferences:                scm:git:https://github.com/eclipse-equinox/equinox.binaries.git;path="bundles/org.eclipse.osgi";commitId=${gitHash}
+Eclipse-SystemBundle:                    true
+    

@@ -1,0 +1,35 @@
+###############################################################################
+# Copyright (c) 2022 IBM Corporation and others.
+#
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#     Stefan Bischof - switch from tycho to bnd
+###############################################################################
+
+Bundle-SymbolicName: ${project.artifactId}; singleton:=true
+
+##/whut?
+Bundle-ClassPath: .
+Bundle-Localization: src/main/resources/launcher
+
+Import-Package: \
+	*
+
+
+-jpms-module-info: ${project.artifactId};access='OPEN'
+
+##really?
+
+gitHash= ${system-allow-fail;git rev-list -1 --no-abbrev-commit HEAD}
+
+Eclipse-BundleShape:                     jar
+Eclipse-ExtensibleAPI:                   true
+Eclipse-SourceReferences:                scm:git:https://github.com/eclipse-equinox/equinox.binaries.git;path="bundles/org.eclipse.equinox.launcher";commitId=${gitHash}
+Eclipse-SystemBundle:                    true
+    

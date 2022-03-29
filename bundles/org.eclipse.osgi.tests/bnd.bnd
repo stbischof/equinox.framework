@@ -1,0 +1,24 @@
+
+Bundle-SymbolicName: ${project.artifactId}; singleton:=true
+Bundle-ActivationPolicy: lazy
+Import-Package: \
+	org.osgi.service.event; resolution:="optional",\
+	*
+DynamicImport-Package: ext.framework.b
+
+
+-make: (*).(jar); type=bnd; recipe="${.}/bnd/$1.bnd"
+
+ 
+Export-Package: \
+	!tb*,\
+	org.eclipse.equinox.log.test,\
+	org.eclipse.osgi.tests.*
+	
+-includeresource:\
+	tb_activator_error1.jar,\
+	tb_test1.jar
+
+Eclipse-BundleShape: dir
+
+Test-Cases: ${classes;HIERARCHY_INDIRECTLY_ANNOTATED;org.junit.platform.commons.annotation.Testable;CONCRETE}

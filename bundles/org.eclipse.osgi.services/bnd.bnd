@@ -1,0 +1,25 @@
+DynamicImport-Package: \
+	javax.servlet,\
+	javax.servlet.http
+	
+Export-Package: \
+	org.osgi.service.cm,\
+	org.osgi.service.component,\
+	org.osgi.service.component.annotations,\
+	org.osgi.service.component.runtime,\
+	org.osgi.service.component.runtime.dto,\
+	org.osgi.service.device,\
+	org.osgi.service.event,\
+	org.osgi.service.http,\
+	org.osgi.service.http.context,\
+	org.osgi.service.http.runtime,\
+	org.osgi.service.http.runtime.dto,\
+	org.osgi.service.http.whiteboard,\
+	org.osgi.service.log,\
+	org.osgi.service.metatype,\
+	org.osgi.service.provisioning,\
+	org.osgi.service.upnp,\
+	org.osgi.service.useradmin,\
+	org.osgi.service.wireadmin
+
+Import-Package: *

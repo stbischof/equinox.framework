@@ -17,101 +17,116 @@
     <version>4.24.0-SNAPSHOT</version>
     <relativePath>../../</relativePath>
   </parent>
-  <groupId>org.eclipse.osgi</groupId>
+  <groupId>org.eclipse.platform</groupId>
   <artifactId>org.eclipse.osgi</artifactId>
-  <version>3.17.300-SNAPSHOT</version>
-  <packaging>eclipse-plugin</packaging>
+  <version>${org.eclipse.osgi.version}</version>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-compiler-plugin</artifactId>
-        <version>${tycho.version}</version>
-        <configuration>
-          <compilerArgs>
-            <arg>-nowarn:[${project.basedir}/osgi/src${path.separator}${project.basedir}/felix/src]</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.moditect</groupId>
-        <artifactId>moditect-maven-plugin</artifactId>
-        <version>1.0.0.RC1</version>
-        <executions>
-          <execution>
-            <id>add-module-infos</id>
-            <phase>package</phase>
-            <goals>
-                <goal>add-module-info</goal>
-            </goals>
-            <configuration>
-                <module>
-                  <moduleInfoSource>
-open module org.eclipse.osgi {
-	requires java.xml;
-	requires static jdk.unsupported;
+	<repositories>
+		<repository>
+			<id>project-maven-repository</id>
+			<url>file:///${project.basedir}/repo</url>
+		</repository>
+	</repositories>
 
-	exports org.eclipse.equinox.log;
-	exports org.eclipse.osgi.container;
-	exports org.eclipse.osgi.container.builders;
-	exports org.eclipse.osgi.container.namespaces;
-	exports org.eclipse.osgi.framework.console;
-	exports org.eclipse.osgi.framework.eventmgr;
-	exports org.eclipse.osgi.framework.log;
-	exports org.eclipse.osgi.launch;
-	exports org.eclipse.osgi.report.resolution;
-	exports org.eclipse.osgi.service.datalocation;
-	exports org.eclipse.osgi.service.debug;
-	exports org.eclipse.osgi.service.environment;
-	exports org.eclipse.osgi.service.localization;
-	exports org.eclipse.osgi.service.pluginconversion;
-	exports org.eclipse.osgi.service.resolver;
-	exports org.eclipse.osgi.service.runnable;
-	exports org.eclipse.osgi.service.security;
-	exports org.eclipse.osgi.service.urlconversion;
-	exports org.eclipse.osgi.signedcontent;
-	exports org.eclipse.osgi.storagemanager;
-	exports org.eclipse.osgi.util;
-	exports org.osgi.dto;
-	exports org.osgi.framework;
-	exports org.osgi.framework.connect;
-	exports org.osgi.framework.dto;
-	exports org.osgi.framework.hooks.bundle;
-	exports org.osgi.framework.hooks.resolver;
-	exports org.osgi.framework.hooks.service;
-	exports org.osgi.framework.hooks.weaving;
-	exports org.osgi.framework.launch;
-	exports org.osgi.framework.namespace;
-	exports org.osgi.framework.startlevel;
-	exports org.osgi.framework.startlevel.dto;
-	exports org.osgi.framework.wiring;
-	exports org.osgi.framework.wiring.dto;
-	exports org.osgi.resource;
-	exports org.osgi.resource.dto;
-	exports org.osgi.service.condpermadmin;
-	exports org.osgi.service.log;
-	exports org.osgi.service.log.admin;
-	exports org.osgi.service.packageadmin;
-	exports org.osgi.service.permissionadmin;
-	exports org.osgi.service.resolver;
-	exports org.osgi.service.startlevel;
-	exports org.osgi.service.url;
-	exports org.osgi.util.tracker;
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>biz.aQute.bnd</groupId>
+				<artifactId>bnd-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 
-	provides org.osgi.framework.launch.FrameworkFactory with org.eclipse.osgi.launch.EquinoxFactory;
-	provides org.osgi.framework.connect.ConnectFrameworkFactory with org.eclipse.osgi.launch.EquinoxFactory;
-
-	uses org.osgi.framework.connect.FrameworkUtilHelper;
-}
-                  </moduleInfoSource>
-                </module>
-                <overwriteExistingFiles>true</overwriteExistingFiles>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
+	<dependencies>
+		<dependency>
+			<groupId>j9stubs</groupId>
+			<artifactId>j9stubs</artifactId>
+			<version>j9stubs</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.equinox</groupId>
+			<artifactId>org.eclipse.equinox.supplement</artifactId>
+			<version>${org.eclipse.equinox.supplement.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.namespace.service</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.framework</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.annotation.bundle</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.annotation.versioning</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.dto</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.condition</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.packageadmin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.resource</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.util.tracker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.startlevel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.condpermadmin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.permissionadmin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.url</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>biz.aQute.bnd</groupId>
+			<artifactId>biz.aQute.bnd.annotation</artifactId>
+			<version>${bnd.version}</version>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.resolver</artifactId>
+			<version>${felix.resolver.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
 </project>
